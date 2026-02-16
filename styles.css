@@ -1,0 +1,177 @@
+body {
+    margin: 0px
+}
+
+.textblock {
+    margin: 30px;
+    padding: 30px;
+    background-color: rgb(212, 255, 241);
+    font-size: large;
+}
+
+
+
+
+
+
+/* FOR MY LOVELY .SVG FILES */
+
+/*
+Learning list: 
+1. css works with the ':hover' property attached, but not js. js requires a '.hover' (or any name)
+2. mouseenter and mouseleave only work for the frontmost element. However, mouseover DOES bubble to parent items 
+3. I could make an auto-detection stack that uses "mousemoved", then recursively checks parent and child elements to see
+        exactly where I am, from document.elementsFromPoint()
+        This may be helpful later on, but I won't implement that until it's necessary.
+4. By default, :css only triggers on fill. But pointer events can change that: 
+    pointer-events: visiblePainted;  /* Default - only fill 
+    pointer-events: all;            /* Fill + stroke 
+    pointer-events: stroke;         /* Only stroke (rarely used) 
+    pointer-events: fill;           /* Only fill (explicit default) 
+    pointer-events: none;           /* Not interactive at all 
+
+
+    [id^="HOVER"]   /* ^ = BEGINS with "HOVER" 
+    [id*="HOVER"]   /* * = CONTAINS "HOVER" anywhere 
+    [id$="HOVER"]   /* $ = ENDS with "HOVER" 
+    [id="HOVER"]    /* = EXACTLY equals "HOVER" 
+
+
+
+
+Synthesizing workflow: 
+    1. In Figma, use "_" to separate names (allows for double-click copy and pasting in VSCode)
+    2. every visual component begins with VIS_
+    3. every functional component begins with FUNC_
+
+    can tag different figma icons with:
+    _DEFAULT
+    _HOVERED
+    _CLICKED
+    if I want to "swap out" a new .svg file to implement a look.
+    I can also just use fill colors and stuff if I want to.
+
+    "SVG uses paint order - elements are drawn in the order they appear in the file. Later = on top."
+
+    so
+    first appear: 
+    VIS 
+
+    last appear: 
+    FUNC
+
+
+    If I have a certain "type" of thing that I want to implment common features with, just tag it with "_FILE" or "_DRAGGABLE" or whatever
+
+
+
+    DICTIONARY for FIGMA --> CSS and JS
+    BG: this component's fill color should change with the background
+    VIS: this component is visible, and not clickable
+    FUNC: this component is invisible, but clickable 
+
+
+
+
+*/
+
+
+
+
+/* If the id starts with 'HOVER', apply these rules:  */
+[id^="HOVER"] {
+    opacity: 0%;
+    transition: opacity .2s ease-out;
+    pointer-events: all;
+}
+
+[id^="HOVER"].jshover {
+    opacity: 100%;
+    transition: opacity .2s ease-in;
+    pointer-events: all;
+}
+
+/* This only works with :css, so to use javascript, you need to use a dot */
+[id^="HOVER"]:hover {
+    opacity: 100%;
+}
+
+
+
+[id^="ICON"] {
+    pointer-events: all;
+    fill: white;
+    fill-opacity: 20%;
+    transition: opacity .2s ease-out;
+}
+
+[id^="ICON"]:hover {
+    pointer-events: all;
+    fill: rgb(0, 0, 0);
+    fill-opacity: 50%;
+    transition: opacity .2s ease-in;
+}
+
+
+[id^="FUNC"] {
+    opacity: 0%;
+}
+
+
+[id='VIS-RECENTER-HOVERED'] {
+    opacity: 0%;
+    transition: opacity .2s ease-out;
+}
+
+[id='VIS-RECENTER-HOVERED'].jshover {
+    opacity: 100%;
+    transition: opacity .2s ease-in;
+}
+
+
+
+/* Cursor events: 
+https://www.w3schools.com/cssref/pr_class_cursor.php
+*/
+
+[id="FUNC-RESIZE-CORNER-R"]:hover {
+    pointer-events: all;
+    cursor: se-resize;
+}
+
+[id="FUNC-RESIZE-CORNER-L"]:hover {
+    pointer-events: all;
+    cursor: sw-resize;
+}
+
+[id="FUNC-RESIZE-CORNER-L"]:hover {
+    pointer-events: all;
+    cursor: sw-resize;
+}
+
+[id="FUNC-RESIZE-H"]:hover {
+    pointer-events: all;
+    cursor: s-resize;
+}
+
+[id="FUNC-RESIZE-W"]:hover {
+    pointer-events: all;
+    cursor: e-resize;
+}
+
+
+[id^="FUNC-PAN"]:hover {
+    pointer-events: all;
+    cursor: grab;
+}
+
+[id^="FUNC-PAN"]:active {
+    pointer-events: all;
+    cursor: grabbing;
+}
+
+
+[id="FUNC-RECENTER"]:hover {
+    pointer-events: all;
+    cursor: crosshair;
+}

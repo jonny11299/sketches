@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketches</title>
+
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/imgs/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imgs/favicon-16x16.png">
+
+    <!-- gimme those cool fonts: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+
+
+    <script src="/libraries/p5.min.js"></script>
+    <script src="/libraries/p5.sound.min.js"></script>
+</head>
+
+<body>
+    <svg id="godhead" version="1.1" width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+
+        <g transform="translate(100, 100)">
+            <rect id="main" width="300" height="200" fill="blue"></rect>
+        </g>
+
+
+    </svg>
+
+    <br>
+
+
+
+
+    <script>
+
+        // Alright bro:
+        /*
+
+            1. Make two toolbars that are clickable;
+            2. top one for export, etc
+            3. left one for different draw commands
+
+            4. Zoom out / in?
+            5. Select an area to export?
+
+            Icons from:
+            https://tabler.io/icons
+
+
+            w3 SVGs (outdated)
+            https://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html#operations
+
+            Devdocs:
+            https://devdocs.io/
+            
+        */
+
+
+
+
+        // --------------------------- WINDOW AND DOM ---------------------------
+
+        function fillScreen() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // SVG is XML-based, so you need to use setAttribute() instead of direct property assignment.
+            // and getAttribute()
+            const gh = document.getElementById('godhead');
+            // console.log(gh);
+            gh.setAttribute('width', w);
+            gh.setAttribute('height', h);
+
+            // Hey bro if you're ever like "omg there's still whitespace", it's your bod:
+            // 
+            // body {
+            //     margin: 0px
+            // }
+            // addCircle(200, 400, 300, 'lime'); // Big, centered, bright green
+        }
+
+
+        setTimeout(() => {
+            console.log("Hey");
+            console.log();
+            console.log(window)
+            console.log(window.innerWidth)
+            console.log(window.innerHeight)
+
+            fillScreen();
+        }, 1);
+
+        window.addEventListener('resize', fillScreen);
+
+        window.addEventListener('changeFocus', () => {
+            console.log("Focus changed to " + window.focused())
+        });
+
+
+
+
+        // --------------------------- EVENT CAPTURE ---------------------------
+        const CAPTURE_ALL_EVENTS = true;
+        const eventTypes = [
+            // Mouse
+            // 'click', 'dblclick', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout',
+            // Keyboard
+            // 'keydown', 'keyup', 'keypress',
+            // Form
+            // 'submit', 'change', 'input', 'focus', 'blur',
+            // Window
+            // 'load', 'resize', 'scroll', 'unload',
+            // Touch
+            // 'touchstart', 'touchmove', 'touchend', 'touchcancel',
+            // Drag
+            // 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'
+        ];
+        eventTypes.forEach(eventType => {
+            if (CAPTURE_ALL_EVENTS) {
+                window.addEventListener(eventType, (e) => {
+                    console.log(`Event: ${eventType}`, 'Target:', e.target, 'Event:', e);
+                }, true); // true = capture phase, catches everything
+            }
+        });
+
+
+
+        function pressed(e) {
+            addCircle(50, e.x, e.y);
+        }
+
+
+        window.addEventListener('click', (e) => {
+            console.log("Clicked");
+            console.log(e);
+            pressed(e);
+        });
+        window.addEventListener('touchstart', (e) => {
+            console.log("touched");
+            console.log(e);
+            pressed(e);
+        });
+        window.addEventListener('keydown', (e) => {
+            console.log(`Key down. (keyCode, key) === ${e.keyCode}, ${e.key}`);
+            // console.log(e);
+        })
+        // --------------------------- END EVENT CAPTURE ---------------------------
+
+
+
+        // --------------------------- FUNCTIONAL ---------------------------
+
+        // returns an svg element of type 'type' appended to the document.
+        function svg(type) {
+            try {
+                const s = document.createElementNS('http://www.w3.org/2000/svg', type);
+                return s;
+            } catch (error) {
+                console.error("Failed to create a new SVG element of type " + type);
+                console.error(error);
+                return false;
+            }
+        }
+
+        function addCircle(radius, x, y, color = "white") {
+
+            const c = svg('circle');
+            c.setAttribute('cx', x);
+            c.setAttribute('cy', y);
+            c.setAttribute('r', radius);
+            c.setAttribute('fill', color);
+
+            const drawArea = document.getElementById('drawCanvas');
+            drawArea.appendChild(c);
+
+        }
+
+
+
+
+    </script>
+
+</body>

@@ -1,0 +1,50 @@
+Okay bro
+
+
+
+
+2/3/26:
+
+I'm learning the constraints of svg files.
+
+I should not nest them. This much is certain. It's foolish to try this.
+Nesting them will make everything hidden, nested underneath the parent element.
+I won't be able to see anything, really.
+
+If I just don't nest any .svg files... then elementsFromPoint really works.
+
+
+I should not use code that I don't understand. It's then that I'm certain I'm going into dangerous territory.
+
+
+I was exploring limitations and abilities. 
+Once something is past the limitations, I should step back and redesign.
+
+
+Claude will happily try to take me past the limitations, but this is where
+we start to get tangled.
+
+
+
+
+
+2/4/26:
+I made a cool shapefile on Figma 
+I'm learning how to capture the svg files programmatically and modify their attributes.
+
+I have to admire how much I learned. This is my first time doing this.
+And I'm building a lot of boilerplate to get it working.
+
+Feels like I'm on the right course, but again, "marathon not a sprint" vibes.
+
+
+
+2/10/26:
+Did a ton of research and video watching.
+Going to have to learn css properly, but it's okay; there's good resources.
+
+Right now, the item can be dragged around, but I should tinker and make it work with the viewBox modified.
+It just involves "toSVG" calculations.
+
+
+Then, I'll implement the scale changes, and the reset button.

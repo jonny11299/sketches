@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JBPaint</title>
+
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/imgs/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imgs/favicon-16x16.png">
+
+    <!-- gimme those cool fonts: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+
+
+    <script src="/libraries/p5.min.js"></script>
+    <script src="/libraries/p5.sound.min.js"></script>
+    <script src="/js/logSVGids.js"></script>
+</head>
+
+<body>
+
+    <svg width="1440" height="1024" viewBox="0 0 1440 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="Desktop - closed">
+            <!-- ids: 
+             
+
+            bg (background)
+
+
+            mainMenu
+
+
+            Hovering:
+                Hovering over VIS-HOVER, enable visibility for:
+                    VIS-HOVER 
+                    Rectangle-HOVER-RECENTER
+
+                Hovering over Rectangle-HOVER-RECENTER_2:
+                    (enable its visibility)
+
+                Hovering over these two, give slight opacity (alpha 50/256)
+                    file-dots 1
+                    menu-2 1
+
+            Clicking:
+                file-dots 1
+                menu-2 1
+
+                FUNC:
+                    FUNC-RESIZE-W
+                    FUNC-RESIZE-H
+                    FUNC-RESIZE-CORNER-R
+                    FUNC-RESIZE-CORNER-L
+                    FUNC-PAN_2
+                    FUNC-PAN_3
+                    FUNC-RECENTER
+
+
+            
+            Changing background color: Change:
+                bg (fill)
+                Rectangle-BG (fill)
+                VIS-RECENTER (fill)
+            
+            -->
+
+            <rect id="bg" width="1440" height="1024" fill="#F0DEFF" />
+            <g id="mainMenu">
+                <g id="HOVER">
+                    <rect id="VIS-HOVER" x="2" y="108" width="106" height="174" transform="rotate(-90 2 108)"
+                        fill="black" stroke="black" stroke-width="4" />
+                    <rect id="VIS-RECENTER" x="2" y="28" width="26" height="26" rx="13" transform="rotate(-90 2 28)"
+                        fill="#F0DEFF" stroke="black" stroke-width="4" />
+                    <rect id="VIS-RECENTER-HOVERED" x="13" y="17" width="4" height="4" rx="2"
+                        transform="rotate(-90 13 17)" fill="black" stroke="black" stroke-width="4" />
+                </g>
+                <rect id="Rectangle-BG" x="20" y="108" width="89" height="156" rx="29" transform="rotate(-90 20 108)"
+                    fill="#F0DEFF" stroke="black" stroke-width="4" />
+                <g id="ICON-menu-2 1">
+                    <g clip-path="url(#clip0_12_31)">
+                        <path id="Vector" d="M50.3333 48.25H83.6666" stroke="black" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path id="Vector_2" d="M50.3333 63.5H83.6666" stroke="black" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path id="Vector_3" d="M50.3333 78.75H83.6666" stroke="black" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                    <rect x="43" y="34" width="48" height="59" rx="9" stroke="black" stroke-width="2" />
+                </g>
+                <g id="ICON-file-dots 1">
+                    <path id="Vector-CLICK"
+                        d="M145.708 93H115.292C113.678 93 112.131 92.2976 110.99 91.0474C109.849 89.7971 109.208 88.1014 109.208 86.3333V39.6667C109.208 37.8986 109.849 36.2029 110.99 34.9526C112.131 33.7024 113.678 33 115.292 33H136.583L151.792 49.6667V86.3333C151.792 88.1014 151.151 89.7971 150.01 91.0474C148.869 92.2976 147.322 93 145.708 93Z"
+                        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path id="Vector-leaf"
+                        d="M136.583 33V46.3333C136.583 47.2174 136.904 48.0652 137.474 48.6904C138.045 49.3155 138.818 49.6667 139.625 49.6667H151.792"
+                        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path id="Vector-dot1" d="M121.375 69.6667V69.7003" stroke="black" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path id="Vector-dot2" d="M130.5 69.6667V69.7003" stroke="black" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path id="Vector-dot3" d="M139.625 69.6667V69.7003" stroke="black" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+                <g id="FUNC">
+                    <rect id="FUNC-RECENTER" x="2" y="25" width="23" height="26" transform="rotate(-90 2 25)"
+                        fill="black" fill-opacity="0.54" stroke="#FF00C8" stroke-width="4" />
+                    <g id="FUNC-PAN">
+                        <rect id="FUNC-PAN_2" x="32" y="25" width="23" height="144" transform="rotate(-90 32 25)"
+                            fill="black" fill-opacity="0.54" stroke="#FF0000" stroke-width="4" />
+                        <rect id="FUNC-PAN_3" x="2" y="86" width="57" height="26" transform="rotate(-90 2 86)"
+                            fill="black" fill-opacity="0.54" stroke="#FF0000" stroke-width="4" />
+                    </g>
+                    <rect id="FUNC-RESIZE-CORNER-L" x="2" y="108" width="18" height="38.6064"
+                        transform="rotate(-90 2 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00"
+                        stroke-width="4" />
+                    <rect id="FUNC-RESIZE-CORNER-R" x="155.383" y="108" width="18" height="20.617"
+                        transform="rotate(-90 155.383 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00"
+                        stroke-width="4" />
+                    <rect id="FUNC-RESIZE-H" x="44.6064" y="108" width="10" height="106.777"
+                        transform="rotate(-90 44.6064 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00"
+                        stroke-width="4" />
+                    <rect id="FUNC-RESIZE-W" x="160" y="86" width="57" height="16" transform="rotate(-90 160 86)"
+                        fill="black" fill-opacity="0.54" stroke="#FF9D00" stroke-width="4" />
+                </g>
+            </g>
+            <text
+                id="Rules for file-dots 1: Unselected: leaf: fill-transparent, stroke-strokeColor CLICK: fill-transparent, stroke-strokeColor dot1-dot3: fill-strokeColor, stroke-strokeColor Selected: leaf: fill-strokeColor, stroke-BGColor CLICK: fill-strokeColor, stroke-strokeColor dot1-dot3: fill-BGColor, stroke-BGColor"
+                fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12"
+                letter-spacing="0em">
+                <tspan x="246" y="51.8636">Rules for file-dots 1:&#10;</tspan>
+                <tspan x="246" y="66.8636">&#10;</tspan>
+                <tspan x="246" y="81.8636">Unselected: &#10;</tspan>
+                <tspan x="246" y="96.8636">leaf: fill-transparent, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="111.864">CLICK: fill-transparent, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="126.864">dot1-dot3: fill-strokeColor, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="141.864">&#10;</tspan>
+                <tspan x="246" y="156.864">Selected:&#10;</tspan>
+                <tspan x="246" y="171.864">leaf: fill-strokeColor, stroke-BGColor&#10;</tspan>
+                <tspan x="246" y="186.864">CLICK: fill-strokeColor, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="201.864">dot1-dot3: fill-BGColor, stroke-BGColor</tspan>
+            </text>
+            <text
+                id="Rules for menu-2 1: Unselected: vector-frame: fill-transparent, stroke-strokeColor vector: fill-transparent, stroke-strokeColor Selected: vector-frame: fill-strokeColor, stroke-strokeColor vector: fill-BGColor , stroke-BGColor"
+                fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12"
+                letter-spacing="0em">
+                <tspan x="246" y="267.864">Rules for menu-2 1:&#10;</tspan>
+                <tspan x="246" y="282.864">&#10;</tspan>
+                <tspan x="246" y="297.864">Unselected: &#10;</tspan>
+                <tspan x="246" y="312.864">vector-frame: fill-transparent, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="327.864">vector: fill-transparent, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="342.864">&#10;</tspan>
+                <tspan x="246" y="357.864">Selected:&#10;</tspan>
+                <tspan x="246" y="372.864">vector-frame: fill-strokeColor, stroke-strokeColor&#10;</tspan>
+                <tspan x="246" y="387.864">vector: fill-BGColor&#10;</tspan>
+                <tspan x="246" y="402.864">, stroke-BGColor</tspan>
+            </text>
+        </g>
+        <defs>
+            <clipPath id="clip0_12_31">
+                <rect x="42" y="33" width="50" height="61" rx="10" fill="white" />
+            </clipPath>
+        </defs>
+
+    </svg>
+
+    <br>
+
+    <script>
+        const svg = {};
+        svg['Desktop - closed'] = document.getElementById('Desktop - closed');
+        svg['mainMenu'] = document.getElementById('mainMenu');
+        svg['HOVER'] = document.getElementById('HOVER');
+        svg['VIS-HOVER'] = document.getElementById('VIS-HOVER');
+        svg['VIS-RECENTER'] = document.getElementById('VIS-RECENTER');
+        svg['VIS-RECENTER-HOVERED'] = document.getElementById('VIS-RECENTER-HOVERED');
+        svg['Rectangle-BG'] = document.getElementById('Rectangle-BG');
+        svg['ICON-menu-2 1'] = document.getElementById('ICON-menu-2 1');
+        svg['Vector'] = document.getElementById('Vector');
+        svg['Vector_2'] = document.getElementById('Vector_2');
+        svg['Vector_3'] = document.getElementById('Vector_3');
+        svg['ICON-file-dots 1'] = document.getElementById('ICON-file-dots 1');
+        svg['Vector-CLICK'] = document.getElementById('Vector-CLICK');
+        svg['Vector-leaf'] = document.getElementById('Vector-leaf');
+        svg['Vector-dot1'] = document.getElementById('Vector-dot1');
+        svg['Vector-dot2'] = document.getElementById('Vector-dot2');
+        svg['Vector-dot3'] = document.getElementById('Vector-dot3');
+        svg['FUNC'] = document.getElementById('FUNC');
+        svg['FUNC-PAN'] = document.getElementById('FUNC-PAN');
+        svg['FUNC-PAN_2'] = document.getElementById('FUNC-PAN_2');
+        svg['FUNC-PAN_3'] = document.getElementById('FUNC-PAN_3');
+        svg['FUNC-RECENTER'] = document.getElementById('FUNC-RECENTER');
+        svg['FUNC-RESIZE-CORNER-L'] = document.getElementById('FUNC-RESIZE-CORNER-L');
+        svg['FUNC-RESIZE-CORNER-R'] = document.getElementById('FUNC-RESIZE-CORNER-R');
+        svg['FUNC-RESIZE-H'] = document.getElementById('FUNC-RESIZE-H');
+        svg['FUNC-RESIZE-W'] = document.getElementById('FUNC-RESIZE-W');
+
+        // svg['FUNC-PAN_2'].addEventListener()
+
+
+
+
+        // svg['mainMenu'].addEventListener('')
+
+
+
+        setTimeout(() => {
+            // LOGSVGIDS_logAllIds('/svgs/Desktop\ -\ closed.svg');
+        }, 1);
+
+    </script>
+
+
+
+
+    <script>
+
+        // Alright bro:
+        /*
+
+            1. Make two toolbars that are clickable;
+            2. top one for export, etc
+            3. left one for different draw commands
+
+            4. Zoom out / in?
+            5. Select an area to export?
+
+            Icons from:
+            https://tabler.io/icons
+
+        */
+
+        // --------------------------- EVENT CAPTURE ---------------------------
+        const CAPTURE_ALL_EVENTS = true;
+        const eventTypes = [
+            // Mouse
+            // 'click', 'dblclick', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout',
+            // Keyboard
+            // 'keydown', 'keyup', 'keypress',
+            // Form
+            // 'submit', 'change', 'input', 'focus', 'blur',
+            // Window
+            // 'load', 'resize', 'scroll', 'unload',
+            // Touch
+            // 'touchstart', 'touchmove', 'touchend', 'touchcancel',
+            // Drag
+            // 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'
+        ];
+        eventTypes.forEach(eventType => {
+            if (CAPTURE_ALL_EVENTS) {
+                window.addEventListener(eventType, (e) => {
+                    console.log(`Event: ${eventType}`, 'Target:', e.target, 'Event:', e);
+                }, true); // true = capture phase, catches everything
+            }
+        });
+
+
+
+        const coord = {
+            // these may fail for nested svgs... I'm not sure yet.
+            // returns from clientX, clientY to the coordinate system within the .svg file
+            toSVG(screenX, screenY, svgElement) {
+                const pt = svgElement.createSVGPoint();
+                pt.x = screenX;
+                pt.y = screenY;
+                return pt.matrixTransform(svgElement.getScreenCTM().inverse());
+            },
+            // returns from inner-SVG coordinates to the screen
+            fromSVG(svgX, svgY, svgElement) {
+                const pt = svgElement.createSVGPoint();
+                pt.x = svgX;
+                pt.y = svgY;
+                return pt.matrixTransform(svgElement.getScreenCTM());
+            }
+        }
+
+
+
+        // m is the mouse state
+        // x0 and y0 are the last place I clicked
+        // via clientX, clientY 
+        const m = {
+            x0: 0,
+            y0: 0
+        }
+
+        const draggableList = [];
+        let dragging = false;
+        // listeners has to be a list.
+        // if we have multiple listeners that move the same group... we'll have different values for both.
+        // or we can go through the target, get its kids, and update their values... let's do that for now.
+        // nah, that doesn't work for groups of groups... temp solution.
+        // we just have to give it multiple listeners.
+
+        // so now, you can pass a single listener via string, or multiple in an array.
+        function makeDraggable(listeners, target) {
+            try {
+                // console.log(typeof listeners);
+                if (typeof listeners === 'string') {
+                    listeners = [listeners];
+                }
+
+                const ls = [];
+                listeners.forEach((l) => {
+                    ls.push(document.getElementById(l));
+                });
+                const t = document.getElementById(target);
+
+                draggableList.push({
+                    listeners: ls,
+                    target: t,
+                    dragging: false,
+                    x0: 0,
+                    y0: 0
+                });
+                console.log(`Successfully registered draggable object(s) ([${listeners}], ${target})`);
+            } catch (e) {
+                console.error(`Failed to make draggable (${listeners}, ${target})`);
+                console.error(e);
+            }
+        }
+
+        makeDraggable(['FUNC-PAN_2', 'FUNC-PAN_3'], 'mainMenu');
+        // makeDraggable('FUNC-PAN_3', 'mainMenu');
+
+
+        // okay, given m.x and m.y, which contain the last mouse positions that we pressed
+        // I need to make a way to stretch the window
+        // (why? I guess I'm just exploring functionality...)
+        //
+
+
+
+
+
+        // store the xy position, say we're dragging
+        function pressed(e) {
+            console.log("Pressed");
+            // console.log(document.elementsFromPoint(e.x, e.y));
+            // console.log(document.elementFromPoint(e.x, e.y));
+
+            dragging = true;
+
+            // going to just drag all of them, fuck it.
+            // not going to seperate the top layer from the ones beneath it.
+            // If you wanted to, you could stuff 'elementFromPoint' in a list and follow the same logic.
+            // that would make only the topmost element move.
+
+
+            draggableList.forEach((o) => {
+                // console.log("Checking ");
+                // console.log(o);
+                // not the fastest list comparison possible here...
+                if (o.listeners.some((l) => document.elementsFromPoint(e.clientX, e.clientY).includes(l))) {
+                    console.log("pressed on: ");
+                    console.log(o);
+                    dragging = true;
+                    o.dragging = true;
+
+                    m.x0 = e.clientX;
+                    m.y0 = e.clientY;
+                }
+            });
+
+            resizeX.forEach((o) => {
+                //
+
+                if (document.elementsFromPoint(e.clientX, e.clientY).includes(o.listener)) {
+                    // console.log("Resizing mainMenu");
+                    resizeXDown = true;
+                    o.scaling = true;
+
+                    m.x0 = e.clientX;
+                    m.y0 = e.clientY;
+                }
+            });
+        }
+        function moved(e) {
+            if (dragging) {
+                // mouse distance from click origin (via clientX/Y)
+                const dx = e.clientX - m.x0;
+                const dy = e.clientY - m.y0;
+
+                draggableList.filter((o) => o.dragging).forEach((o) => {
+                    const x = o.x0 + dx;
+                    const y = o.y0 + dy;
+                    o.target.setAttribute("transform", `translate(${x}, ${y})`);
+                });
+
+                resizeX.filter((o) => o.scaling).forEach((o) => {
+
+
+                    o.target.setAttribute("transform", `scale(${x}, ${y})`);
+                })
+
+            }
+        }
+        function released(e) {
+            if (dragging) {
+                // mouse distance from click origin (via clientX/Y)
+                const dx = e.clientX - m.x0;
+                const dy = e.clientY - m.y0;
+
+                draggableList.filter((o) => o.dragging).forEach((o) => {
+                    const x = o.x0 + dx;
+                    const y = o.y0 + dy;
+                    o.target.setAttribute("transform", `translate(${x}, ${y})`);
+
+                    o.x0 = x;
+                    o.y0 = y;
+                });
+
+                // just setting them all cuz f it.
+                // seems to capture more undiscovered edge cases.
+                draggableList.forEach((o) => {
+                    o.dragging = false;
+                });
+            }
+
+            if (resizeXDown) {
+                resizeX.forEach((o) => {
+                    o.scaling = false;
+                });
+            }
+
+            dragging = false;
+            resizeXDown = false;
+        }
+
+
+
+        window.addEventListener('mousedown', (e) => {
+            console.log("mousedown");
+            // console.log(e);
+            pressed(e);
+        });
+        window.addEventListener('touchstart', (e) => {
+            console.log("touchstart");
+            // console.log(e);
+            pressed(e);
+        });
+
+
+        window.addEventListener('mousemove', (e) => {
+            // console.log("mousemove");
+            // console.log(e);
+            moved(e);
+        });
+        window.addEventListener('touchmove', (e) => {
+            // console.log("touchmove");
+            // console.log(e);
+            moved(e);
+        });
+
+
+        window.addEventListener('mouseup', (e) => {
+            console.log("mouseup");
+            // console.log(e);
+            released(e);
+        });
+        window.addEventListener('touchend', (e) => {
+            console.log("touchend");
+            // console.log(e);
+            released(e);
+        });
+
+
+
+
+
+        // what is the math for... mouse dragged amount, mouse stays over the same pixel?
+        // I guess, take l0 = (distance from anchor to click)
+        // l1 = (distance from anchor to new mouse location)
+        // scale by l1/l0
+        // and then do I just set the local variable to that?
+
+        const scale = {
+            x: 1,
+            y: 1
+        };
+
+        const resizeX = [];
+        let resizeXDown = false;
+
+        function makeResizeX(listener, target) {
+            try {
+                const l = document.getElementById(listener);
+                const t = document.getElementById(target);
+
+                // give it 
+                resizeX.push({
+                    listener: l,
+                    target: t,
+                    scaling: false,
+                    l: 1,   // current length (in scale value)
+                    l0: 0 // distance in clientX from anchor to pressedDown
+                });
+
+            } catch (error) {
+                console.error(`Could not makeResizeX for ${l}, ${t}`);
+                console.error(error);
+            }
+        }
+
+        makeResizeX('FUNC-RESIZE-W', 'mainMenu');
+
+
+
+        window.addEventListener('keydown', (e) => {
+            console.log(`Key down. (keyCode, key) === ${e.keyCode}, ${e.key}`);
+            // console.log(e);
+
+            // 39 for right, 37 for left
+            if (e.keyCode >= 35 && e.keyCode <= 43) e.preventDefault();
+            if (e.keyCode === 39) {
+                const mm = svg['mainMenu'];
+
+                scale.x *= 1.1;
+                mm.setAttribute('transform', `scale(${scale.x}, ${scale.y})`);
+            }
+            if (e.keyCode === 37) {
+
+                const mm = svg['mainMenu'];
+
+                scale.x /= 1.1;
+                mm.setAttribute('transform', `scale(${scale.x}, ${scale.y})`);
+            }
+        });
+
+
+        // Make them hover-visible:
+
+        svg['mainMenu'].addEventListener('mouseenter', (e) => {
+            //console.log("Entered");
+            svg['HOVER'].classList.add('jshover');
+
+            // console.log(e);
+        });
+        svg['mainMenu'].addEventListener('mouseleave', (e) => {
+            // console.log("left");
+
+            svg['HOVER'].classList.remove('jshover');
+        });
+
+        svg['FUNC-RECENTER'].addEventListener('mouseenter', (e) => {
+            svg['VIS-RECENTER-HOVERED'].classList.add('jshover');
+        });
+        svg['FUNC-RECENTER'].addEventListener('mouseleave', (e) => {
+            svg['VIS-RECENTER-HOVERED'].classList.remove('jshover');
+
+        });
+
+
+
+        // --------------------------- END EVENT CAPTURE ---------------------------
+
+
+
+
+
+        // --------------------------- WINDOW AND DOM ---------------------------
+
+        // makes the godhead .svg element fill the entire screen
+        function fillScreen() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // SVG is XML-based, so you need to use setAttribute() instead of direct property assignment.
+            // and getAttribute()
+            // const gh = document.getElementById('godhead');
+            // console.log(gh);
+            // gh.setAttribute('width', w);
+            // gh.setAttribute('height', h);
+
+        }
+
+
+
+
+
+
+        setTimeout(() => {
+            // console.log("Hey");
+            console.log();
+            console.log(window)
+            console.log(window.innerWidth)
+            console.log(window.innerHeight)
+
+            fillScreen();
+
+
+            // insertDesktop();
+        }, 1);
+
+        window.addEventListener('resize', fillScreen);
+
+        window.addEventListener('changeFocus', () => {
+            console.log("Focus changed to " + window.focused())
+        });
+
+
+
+
+        // --------------------------- FUNCTIONAL ---------------------------
+
+        // returns an svg element of type 'type' appended to the document.
+        function makeSvg(type) {
+            try {
+                const s = document.createElementNS('http://www.w3.org/2000/svg', type);
+                return s;
+            } catch (error) {
+                console.error("Failed to create a new SVG element of type " + type);
+                console.error(error);
+                return false;
+            }
+        }
+
+        function addCircle(radius, x, y, color = "white") {
+
+            const c = makeSvg('circle');
+            c.setAttribute('cx', x);
+            c.setAttribute('cy', y);
+            c.setAttribute('r', radius);
+            c.setAttribute('fill', color);
+
+            const drawArea = document.getElementById('drawCanvas');
+            drawArea.appendChild(c);
+
+        }
+
+
+
+
+    </script>
+
+</body>

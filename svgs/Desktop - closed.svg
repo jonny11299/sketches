@@ -1,0 +1,46 @@
+<svg width="1440" height="1024" viewBox="0 0 1440 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Desktop - closed">
+<rect width="1440" height="1024" fill="#F0DEFF"/>
+<g id="mainMenu">
+<g id="HOVER">
+<rect id="VIS-HOVER" x="2" y="108" width="106" height="174" transform="rotate(-90 2 108)" fill="black" stroke="black" stroke-width="4"/>
+<rect id="VIS-RECENTER" x="2" y="28" width="26" height="26" rx="13" transform="rotate(-90 2 28)" fill="#F0DEFF" stroke="black" stroke-width="4"/>
+<rect id="VIS-RECENTER-HOVERED" x="13" y="17" width="4" height="4" rx="2" transform="rotate(-90 13 17)" fill="black" stroke="black" stroke-width="4"/>
+</g>
+<rect id="Rectangle-BG" x="20" y="108" width="89" height="156" rx="29" transform="rotate(-90 20 108)" fill="#F0DEFF" stroke="black" stroke-width="4"/>
+<g id="menu-2 1">
+<g clip-path="url(#clip0_12_31)">
+<path id="Vector" d="M50.3333 48.25H83.6666" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M50.3333 63.5H83.6666" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M50.3333 78.75H83.6666" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<rect x="43" y="34" width="48" height="59" rx="9" stroke="black" stroke-width="2"/>
+</g>
+<g id="file-dots 1">
+<path id="Vector-CLICK" d="M145.708 93H115.292C113.678 93 112.131 92.2976 110.99 91.0474C109.849 89.7971 109.208 88.1014 109.208 86.3333V39.6667C109.208 37.8986 109.849 36.2029 110.99 34.9526C112.131 33.7024 113.678 33 115.292 33H136.583L151.792 49.6667V86.3333C151.792 88.1014 151.151 89.7971 150.01 91.0474C148.869 92.2976 147.322 93 145.708 93Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector-leaf" d="M136.583 33V46.3333C136.583 47.2174 136.904 48.0652 137.474 48.6904C138.045 49.3155 138.818 49.6667 139.625 49.6667H151.792" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector-dot1" d="M121.375 69.6667V69.7003" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector-dot2" d="M130.5 69.6667V69.7003" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector-dot3" d="M139.625 69.6667V69.7003" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="FUNC">
+<g id="FUNC-PAN">
+<rect id="FUNC-PAN_2" x="32" y="25" width="23" height="144" transform="rotate(-90 32 25)" fill="black" fill-opacity="0.54" stroke="#FF0000" stroke-width="4"/>
+<rect id="FUNC-PAN_3" x="2" y="86" width="57" height="26" transform="rotate(-90 2 86)" fill="black" fill-opacity="0.54" stroke="#FF0000" stroke-width="4"/>
+<rect id="FUNC-RECENTER" x="2" y="25" width="23" height="26" transform="rotate(-90 2 25)" fill="black" fill-opacity="0.54" stroke="#FF00C8" stroke-width="4"/>
+</g>
+<rect id="FUNC-RESIZE-CORNER-L" x="2" y="108" width="18" height="38.6064" transform="rotate(-90 2 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00" stroke-width="4"/>
+<rect id="FUNC-RESIZE-CORNER-R" x="155.383" y="108" width="18" height="20.617" transform="rotate(-90 155.383 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00" stroke-width="4"/>
+<rect id="FUNC-RESIZE-H" x="44.6064" y="108" width="10" height="106.777" transform="rotate(-90 44.6064 108)" fill="black" fill-opacity="0.54" stroke="#FF9D00" stroke-width="4"/>
+<rect id="FUNC-RESIZE-W" x="160" y="86" width="57" height="16" transform="rotate(-90 160 86)" fill="black" fill-opacity="0.54" stroke="#FF9D00" stroke-width="4"/>
+</g>
+</g>
+<text id="Rules for file-dots 1: Unselected: leaf: fill-transparent, stroke-strokeColor CLICK: fill-transparent, stroke-strokeColor dot1-dot3: fill-strokeColor, stroke-strokeColor Selected: leaf: fill-strokeColor, stroke-BGColor CLICK: fill-strokeColor, stroke-strokeColor dot1-dot3: fill-BGColor, stroke-BGColor" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="246" y="51.8636">Rules for file-dots 1:&#10;</tspan><tspan x="246" y="66.8636">&#10;</tspan><tspan x="246" y="81.8636">Unselected: &#10;</tspan><tspan x="246" y="96.8636">leaf: fill-transparent, stroke-strokeColor&#10;</tspan><tspan x="246" y="111.864">CLICK: fill-transparent, stroke-strokeColor&#10;</tspan><tspan x="246" y="126.864">dot1-dot3: fill-strokeColor, stroke-strokeColor&#10;</tspan><tspan x="246" y="141.864">&#10;</tspan><tspan x="246" y="156.864">Selected:&#10;</tspan><tspan x="246" y="171.864">leaf: fill-strokeColor, stroke-BGColor&#10;</tspan><tspan x="246" y="186.864">CLICK: fill-strokeColor, stroke-strokeColor&#10;</tspan><tspan x="246" y="201.864">dot1-dot3: fill-BGColor, stroke-BGColor</tspan></text>
+<text id="Rules for menu-2 1: Unselected: vector-frame: fill-transparent, stroke-strokeColor vector: fill-transparent, stroke-strokeColor Selected: vector-frame: fill-strokeColor, stroke-strokeColor vector: fill-BGColor , stroke-BGColor" fill="black" style="white-space: pre" xml:space="preserve" font-family="Inter" font-size="12" letter-spacing="0em"><tspan x="246" y="267.864">Rules for menu-2 1:&#10;</tspan><tspan x="246" y="282.864">&#10;</tspan><tspan x="246" y="297.864">Unselected: &#10;</tspan><tspan x="246" y="312.864">vector-frame: fill-transparent, stroke-strokeColor&#10;</tspan><tspan x="246" y="327.864">vector: fill-transparent, stroke-strokeColor&#10;</tspan><tspan x="246" y="342.864">&#10;</tspan><tspan x="246" y="357.864">Selected:&#10;</tspan><tspan x="246" y="372.864">vector-frame: fill-strokeColor, stroke-strokeColor&#10;</tspan><tspan x="246" y="387.864">vector: fill-BGColor&#10;</tspan><tspan x="246" y="402.864">, stroke-BGColor</tspan></text>
+</g>
+<defs>
+<clipPath id="clip0_12_31">
+<rect x="42" y="33" width="50" height="61" rx="10" fill="white"/>
+</clipPath>
+</defs>
+</svg>

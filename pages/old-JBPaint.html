@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JBPaint</title>
+
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/imgs/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imgs/favicon-16x16.png">
+
+    <!-- gimme those cool fonts: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+
+
+    <script src="/libraries/p5.min.js"></script>
+    <script src="/libraries/p5.sound.min.js"></script>
+</head>
+
+<body>
+    <svg id="godhead" version="1.1" width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
+
+        <rect width="100%" height="100%" fill="red" />
+        <rect width="50%" height="100%" fill="blue" />
+
+        <circle cx="150" cy="100" r="80" fill="green" />
+        <circle cx="500" cy="200" r="100" fill="rgb(255, 0, 255)" />
+
+        <text x="150" y="125" font-size="60" text-anchor="middle" fill="white">SVG</text>
+
+
+
+        <!-- Making a viewbox -->
+        <svg id="drawSvg" x="300" y="50" width="1000" height="700" viewBox="0 0 1000 700">
+
+            <g id="drawCanvas">
+
+            </g>
+        </svg>
+
+        <!-- Strategically hide whatever's off the canvas by printing over it -->
+        <!-- print draw canvas border -->
+        <!-- <rect width="100%" height="100%" y="0" fill="rgba(0, 0, 0, 0)" stroke="black" stroke-width="25px"> 
+        </rect>-->
+
+
+        <!-- Canvas background, then canvas, then border -->
+        <!-- <rect width="100%" height="10%" fill="white"></rect>-->
+        <g id="guiCanvas">
+        </g>
+        <!-- <rect width="100%" height="10%" fill="rgba(0, 0, 0, 0)" stroke="black" stroke-width="13px"></rect>-->
+
+
+
+    </svg>
+
+    <br>
+
+
+
+
+    <script>
+
+        // Alright bro:
+        /*
+
+            1. Make two toolbars that are clickable;
+            2. top one for export, etc
+            3. left one for different draw commands
+
+            4. Zoom out / in?
+            5. Select an area to export?
+
+            Icons from:
+            https://tabler.io/icons
+
+        */
+
+
+
+
+        // --------------------------- WINDOW AND DOM ---------------------------
+
+        // makes the godhead .svg element fill the entire screen
+        function fillScreen() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // SVG is XML-based, so you need to use setAttribute() instead of direct property assignment.
+            // and getAttribute()
+            const gh = document.getElementById('godhead');
+            // console.log(gh);
+            gh.setAttribute('width', w);
+            gh.setAttribute('height', h);
+
+            // Hey bro if you're ever like "omg there's still whitespace", it's your bod:
+            // 
+            // body {
+            //     margin: 0px
+            // }
+            // addCircle(200, 400, 300, 'lime'); // Big, centered, bright green
+        }
+
+
+        setTimeout(() => {
+            console.log("Hey");
+            console.log();
+            console.log(window)
+            console.log(window.innerWidth)
+            console.log(window.innerHeight)
+
+            fillScreen();
+        }, 1);
+
+        window.addEventListener('resize', fillScreen);
+
+        window.addEventListener('changeFocus', () => {
+            console.log("Focus changed to " + window.focused())
+        });
+
+
+
+
+        // --------------------------- EVENT CAPTURE ---------------------------
+        const CAPTURE_ALL_EVENTS = true;
+        const eventTypes = [
+            // Mouse
+            // 'click', 'dblclick', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout',
+            // Keyboard
+            // 'keydown', 'keyup', 'keypress',
+            // Form
+            // 'submit', 'change', 'input', 'focus', 'blur',
+            // Window
+            // 'load', 'resize', 'scroll', 'unload',
+            // Touch
+            // 'touchstart', 'touchmove', 'touchend', 'touchcancel',
+            // Drag
+            // 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'
+        ];
+        eventTypes.forEach(eventType => {
+            if (CAPTURE_ALL_EVENTS) {
+                window.addEventListener(eventType, (e) => {
+                    console.log(`Event: ${eventType}`, 'Target:', e.target, 'Event:', e);
+                }, true); // true = capture phase, catches everything
+            }
+        });
+
+
+        const coord = {
+            // these may fail for nested svgs... I'm not sure yet.
+            // returns from clientX, clientY to the coordinate system within the .svg file
+            toSVG(screenX, screenY, svgElement) {
+                const pt = svgElement.createSVGPoint();
+                pt.x = screenX;
+                pt.y = screenY;
+                return pt.matrixTransform(svgElement.getScreenCTM().inverse());
+            },
+            // returns from inner-SVG coordinates to the screen
+            fromSVG(svgX, svgY, svgElement) {
+                const pt = svgElement.createSVGPoint();
+                pt.x = svgX;
+                pt.y = svgY;
+                return pt.matrixTransform(svgElement.getScreenCTM());
+            }
+        }
+
+
+
+
+        // Claude is fucking stupid and the correct solution
+        // is to iterate through my container and its children
+        // 
+        // and run a boolean check from the svg
+        //
+        // okay so I need to build a list of the svg and its children
+        // then filter this list for every element that is within my x and y
+
+
+        // Okay bro. This actually works.
+        // It gets all of the layers starting at the parent element, via iterating through children
+        // each layer has itself and sometimes children.
+        function getLayers(parent = document.getElementById('godhead')) {
+            const layer = {
+                self: parent,
+                children: []
+            }
+
+            parent.children.forEach((c) => {
+                layer.children.push(getLayers(c));
+            });
+
+
+            return layer;
+        }
+
+
+        function svgsAt(clientX, clientY, svgContainer = document.getElementById('godhead')) {
+            const x = clientX;
+            const y = clientY;
+
+            console.log(`You're at ${x}, ${y}`);
+
+            const allElements = document.elementsFromPoint(x, y);
+            console.log(allElements);
+
+            // allElements.forEach((e) => {
+            //     console.log(e.tagName.toLowerCase());
+            // })
+
+            const svgs = allElements.filter((e) => e.tagName.toLowerCase() === 'svg');
+            console.log(svgs);
+
+
+            console.log(svgs[0].children);
+
+            console.log("----- boutta get my layers :o ----");
+            console.log(getLayers());
+            // console.log(Object.keys(allElements));
+
+            // const svgs = allElements.filter((e) => )
+
+            /*
+            svgIds.forEach((id) => {
+                console.log(id);
+                const s = document.getElementById(id);
+                console.log(s);
+                console.log(`x, y, width, height: ${s.x}, ${s.y}, ${s.width}, ${s.height}`);
+            });*/
+        }
+
+
+
+        function pressed(e) {
+            const s = document.elementsFromPoint(e.x, e.y);
+
+            // console.log(`Clicked on ${s.getAttribute('id')}`);
+            const drawBox = document.getElementById('drawSvg');
+            // console.log(drawBox);
+
+            // const { x, y } = coord.toSVG(e.x, e.y, drawBox);
+
+            svgsAt(e.x, e.y);
+
+            // addCircle(50, x, y);
+        }
+
+
+        window.addEventListener('click', (e) => {
+            console.log("Clicked");
+            console.log(e);
+            pressed(e);
+        });
+        window.addEventListener('touchstart', (e) => {
+            console.log("touched");
+            console.log(e);
+            pressed(e);
+        });
+        window.addEventListener('keydown', (e) => {
+            console.log(`Key down. (keyCode, key) === ${e.keyCode}, ${e.key}`);
+            // console.log(e);
+        })
+        // --------------------------- END EVENT CAPTURE ---------------------------
+
+
+
+        // --------------------------- FUNCTIONAL ---------------------------
+
+        // returns an svg element of type 'type' appended to the document.
+        function svg(type) {
+            try {
+                const s = document.createElementNS('http://www.w3.org/2000/svg', type);
+                return s;
+            } catch (error) {
+                console.error("Failed to create a new SVG element of type " + type);
+                console.error(error);
+                return false;
+            }
+        }
+
+        function addCircle(radius, x, y, color = "white") {
+
+            const c = svg('circle');
+            c.setAttribute('cx', x);
+            c.setAttribute('cy', y);
+            c.setAttribute('r', radius);
+            c.setAttribute('fill', color);
+
+            const drawArea = document.getElementById('drawCanvas');
+            drawArea.appendChild(c);
+
+        }
+
+
+
+
+    </script>
+
+</body>
