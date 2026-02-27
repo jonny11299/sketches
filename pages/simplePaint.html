@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+
+
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dots</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imgs/favicon-16x16.png">
+
+    <!-- gimme those cool fonts: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+
+
+</head>
+
+
+
+<style>
+
+</style>
+
+
+
+<body>
+
+
+
+    <!--
+
+        The layout is:
+        1. CSS controls
+        2. HTML elements
+        3. JS implementation
+            - Define the structures
+            - Fill the structures with event listeners, state tracking, etc
+    
+    
+        So, I have a few skills to get better at:
+            1. Practice designing website layouts, with grids, flexboxes, etc
+            2. Practice designing SVG layouts. 
+                Just draw some shit with SVG definitions.
+
+            3. Build that state up.
+
+            Could make a very simple draw app based on what I know...
+                lines
+                rects
+                circles
+                color
+                stroke
+                export image
+    
+    -->
+
+
+
+
+    <style>
+        /* 
+            1. Think about parent and children elements
+
+
+
+            Display: 
+                - none: erased / invisible
+                - inline: stays in same line, only takes up as much space as needed
+                - block: new line, take up full width available
+                - inline-block: side by side, take as much room as needed
+                - flex: parent becomes flex container, child becomes flex items
+                - flexbox
+                - grid; rows and columns of predetermined size
+
+
+            Block elements for spacing: 
+                width
+                height
+                margin
+                padding
+
+            Flex: 
+                - Flex-Direction: row, column
+                - align-items: center 
+                - justify-content: center (picks middle of teh  div)
+                - gap: 2rem
+
+            pointer-events:
+                none (makes the object invisible to mouseover and stuff)
+
+
+        */
+
+
+
+        /* 
+            Okay, now this display has 5 divs to the left, one palette on the right.
+        */
+        .layout {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr 4fr);
+            /* time signature.  */
+            /* grid-template-columns: repeat(2, 2fr 1fr); /* repeat 2 units of '2/3rds, 1/3rd' spacing. */
+            gap: 1rem;
+            padding: 1rem;
+
+        }
+
+        .palletteParent {
+            display: block;
+            /* time signature.  */
+            /* grid-template-columns: repeat(2, 2fr 1fr); /* repeat 2 units of '2/3rds, 1/3rd' spacing. */
+            gap: 1rem;
+            padding: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .palletteButton {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            /* rounded rect */
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            height: 2rem;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .canvasParent {
+            background: white;
+            border-radius: 12px;
+            /* rounded rect */
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            align-items: center;
+        }
+
+        .canvasItem {
+            background: rgb(142, 244, 255);
+            border-radius: 12px;
+            /* rounded rect */
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+            height: 30rem
+        }
+    </style>
+
+    <div id="layout" class="layout">
+        <div id="palletteParent" class="palletteParent">
+            <div class="palletteButton">
+                <button id="makeRed">makeRed</button>
+            </div>
+            <div class="palletteButton">
+                <button id='drawCircle'>drawCircle</button>
+            </div>
+            <div class="palletteButton">
+                <button id='drawCircle'>drawRect</button>
+            </div>
+            <div class="palletteButton">
+                <button id="printScreen">printScreen</button>
+            </div>
+            <div class="palletteButton">
+                b5
+            </div>
+
+        </div>
+        <div id="canvasParent" class="canvasParent">
+            <div id="canvasItem" class="canvasItem">
+                <svg id="viewBox" width="100%" height="100%" viewBox="0 0 1000 1000" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <rect id="bg" width="100%" height="100%" x="0" y="0" fill="#F0DEFF" />
+
+                    <g id="drawnElements">
+
+                    </g>
+
+                    <g id="breadcrumbs">
+
+                    </g>
+
+                    <g id="cursor">
+
+                    </g>
+
+                </svg>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        // Now, I can add events via eventlisteners to elements
+
+        function uponClick(elementName, action) {
+            try {
+                const o = document.getElementById(elementName);
+                o.addEventListener('click', action);
+            } catch (error) {
+                console.error(`could not setup uponClick for (${elementName}, ${action}))`);
+                console.error(error);
+            }
+        }
+
+
+
+        let mhc;
+        const mhs = 30; // mousehoversize
+        function mySetup() {
+            console.log("Running setup");
+
+            const mr = document.getElementById('makeRed');
+            mr.addEventListener("click", makeRed);
+
+            const cursor = document.getElementById('cursor');
+
+
+            // below lines implemeent the above 
+            uponClick('drawCircle', drawCircle);
+            uponClick('printScreen', printScreen);
+
+
+            let mouseHoverCircle = makeSvg('circle');
+            mouseHoverCircle.setAttribute('cx', 0);
+            mouseHoverCircle.setAttribute('cy', 0);
+            mouseHoverCircle.setAttribute('r', mhs);
+            mouseHoverCircle.setAttribute('fill', `black`);
+            mouseHoverCircle.style.pointerEvents = 'none';
+
+            mhc = mouseHoverCircle;
+            cursor.appendChild(mouseHoverCircle);
+
+        }
+        mySetup();
+
+
+        function makeRed() {
+            console.log("Making red");
+
+            const ci = document.getElementById('canvasItem');
+            ci.style = "background: rgba(255, 100, 100, 100);";
+        }
+
+
+        function drawCircle() {
+            console.log("Drawwing circle");
+
+            const x = Math.random() * 500;
+            const y = Math.random() * 500;
+            const s = 50;
+
+            const r = Math.random() * 255;
+            const g = Math.random() * 255;
+            const b = Math.random() * 255;
+
+            const c = makeSvg('circle');
+            c.setAttribute('cx', x);
+            c.setAttribute('cy', y);
+            c.setAttribute('r', s);
+            c.setAttribute('fill', `rgb(${r}, ${g}, ${b})`);
+
+            const parent = document.getElementById('drawnElements');
+            parent.appendChild(c);
+        }
+
+
+
+        // returns an svg element of type 'type' appended to the document.
+        function makeSvg(type) {
+            try {
+                const s = document.createElementNS('http://www.w3.org/2000/svg', type);
+                return s;
+            } catch (error) {
+                console.error("Failed to create a new SVG element of type " + type);
+                console.error(error);
+                return false;
+            }
+        }
+
+        function toSVG(clientX, clientY, svgElement = document.getElementById('viewBox')) {
+            const pt = svgElement.createSVGPoint();
+            pt.x = clientX;
+            pt.y = clientY;
+            return pt.matrixTransform(svgElement.getScreenCTM().inverse());
+        }
+
+
+        const placedCircles = [];
+
+        document.getElementById('canvasItem').addEventListener('mousemove', (e) => {
+            const pt = toSVG(e.clientX, e.clientY);
+            // console.log(`toSvg: (${pt.x}, ${pt.y})`);
+
+            mhc.setAttribute('cx', pt.x);
+            mhc.setAttribute('cy', pt.y);
+
+            // console.log(e);
+            if (false) {
+
+                placedCircles.forEach((c) => {
+                    if (document.elementsFromPoint(e.clientX, e.clientY).includes(c)) {
+
+                        // console.log("Moved over a circ");
+                        const a = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+
+                        c.setAttribute('fill', `rgb(${a[0]}, ${a[1]}, ${a[2]})`);
+                    }
+                });
+
+            }
+        });
+
+
+        document.getElementById('canvasItem').addEventListener('click', (e) => {
+            // console.log(e);
+            // console.log("Clicked");
+            const pt = toSVG(e.clientX, e.clientY);
+            // console.log(`toSvg: (${pt.x}, ${pt.y})`);
+
+            const newCircle = makeSvg('circle');
+
+            newCircle.setAttribute('cx', pt.x);
+            newCircle.setAttribute('cy', pt.y);
+            newCircle.setAttribute('r', mhs);
+            newCircle.setAttribute('fill', "white");
+            newCircle.setAttribute('stroke', "green");
+            newCircle.setAttribute('stroke-width', mhs / 5);
+
+            newCircle.addEventListener('mouseover', () => {
+                const a = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+                newCircle.setAttribute('fill', `rgb(${a[0]}, ${a[1]}, ${a[2]})`);
+            });
+
+            document.getElementById('breadcrumbs').appendChild(newCircle);
+            placedCircles.push(newCircle);
+        });
+
+
+        function printScreen() {
+            console.log("Printing screen");
+            const e = document.getElementById('viewBox');
+            console.log(e);
+
+
+            // clear cursor before export
+            const MEMORY_CURSOR = document.getElementById('cursor').innerHTML;
+            document.getElementById('cursor').innerHTML = '';
+
+
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(e);
+
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'drawing.svg';
+            a.click();
+
+            URL.revokeObjectURL(url); // clean up
+
+            document.getElementById('cursor').innerHTML = MEMORY_CURSOR;
+        }
+
+    </script>
+
+
+
+</body>

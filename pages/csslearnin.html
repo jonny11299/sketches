@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+
+<head>
+    <title>Website Layouts</title>
+</head>
+
+
+<body>
+
+    <!--
+    
+        Notes:
+
+
+        Child border -- 
+            border: 3px solid black;
+    
+    
+    
+    -->
+
+    <style>
+        .parent {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-content: space-around;
+        }
+
+        .child {
+            padding: 1rem;
+            margin: 2px;
+            border-radius: 1rem;
+            border: 3px solid black;
+        }
+    </style>
+
+    <div class="parent">
+        <div class="child">lorem ipsum</div>
+        <div class="child">dolor</div>
+        <div class="child">sin amat</div>
+        <div class="child">and then... yadda yadda yadda</div>
+        <div class="child">did I mention, "yadda"?</div>
+    </div>
+
+
+
+    <!-- Okay, new sketch -->
+
+    <!-- 
+    
+        I can build modern websites.
+        I can build unique websites.
+        I can build with AI.
+        I can build full-stack.
+
+        I can explain my work.
+        I understand the fundamentals.
+        I am flexible with implementation details, but I do have a specific workflow I prefer.
+
+    -->
+
+
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+    <style>
+        .container {
+            display: flex;
+            grid-template-columns: repeat(1, 2fr 1fr);
+            flex-direction: column;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .item {
+            border: 3px solid green;
+            padding: 0.8rem;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 15rem;
+
+            background-color: white;
+        }
+
+        .item:hover {
+            background-color: bisque;
+            cursor: pointer;
+        }
+
+        .invis {
+            border: 3px solid green;
+            padding: 0.8rem;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 15rem;
+
+            background-color: white;
+
+        }
+    </style>
+    <div class="">
+        <div class="item" style="justify-self: center; max-width: 100%; margin: 1rem; padding: 1rem;">
+            <h1>Check it out:</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="item">I can build modern websites.</div>
+        <br>
+        <div class="item">I can build unique websites.</div>
+        <br>
+        <div class="item">I can build with AI.</div>
+        <br>
+        <div class="item">I can build full-stack.</div>
+        <div class="item" style="opacity: 0; cursor: default"></div><br>
+        <div class="item">I can explain my work.</div>
+        <br>
+        <div class="item">I understand the fundamentals.</div>
+        <br>
+        <div class="item">I have a particular design ethos, but I am flexible to others' workflows.</div>
+    </div>
+
+
+
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+
+    <style>
+        .svgcontainer {
+            border: 3px solid blue;
+            border-radius: 1rem;
+            width: 90%;
+            height: 90%;
+            justify-self: center;
+            margin: 10rem;
+            /* this is what you want for putting myself in the middle */
+            background-color: rgb(216, 216, 255);
+        }
+
+        .svgcontainer:hover {
+            background-color: rgb(185, 185, 255);
+        }
+    </style>
+
+    <div class="svgcontainer">
+        <svg id="viewBox" width="100%" height="100%" viewBox="0 0 1000 1000" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <rect x="50%" y="50%" width="25%" height="25%" fill="green" round="5px">
+
+            </rect>
+
+        </svg>
+    </div>
+</body>

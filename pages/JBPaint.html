@@ -523,13 +523,21 @@
 
                 scale.x *= 1.1;
                 mm.setAttribute('transform', `scale(${scale.x}, ${scale.y})`);
-            }
-            if (e.keyCode === 37) {
-
+            } else if (e.keyCode === 37) {
                 const mm = svg['mainMenu'];
 
                 scale.x /= 1.1;
                 mm.setAttribute('transform', `scale(${scale.x}, ${scale.y})`);
+            } else if (e.keyCode === 38) { //up
+                const mm = svg['mainMenu'];
+
+                scale.y *= 1.1;
+                mm.setAttribute('transform', `scale(${scale.x}, ${scale.y})`);
+            } else if (e.keyCode === 40) { //down
+                const mm = svg['mainMenu'];
+
+                scale.y /= 1.1;
+                mm.setAttribute('transform', `scale(${scale.x}, ${scale.y}), translate(100, 100)`);
             }
         });
 

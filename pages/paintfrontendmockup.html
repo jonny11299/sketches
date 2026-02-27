@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+
+<!-- 
+
+Notes:
+
+For bugs, control+F for "BUG!!!"
+For feature ideas, control+F for "FEATURE!!!"
+
+
+
+
+
+To do:
+1. Control stroke width and color
+2. Control fill color
+(make a color picker and stuff)
+
+3. Change the frontend visuals to match better, like, a circle button for circles
+4. and a better method of placing them.
+
+-->
+
+
+
+
+
+<title>
+    Mockup
+</title>
+
+<body>
+    <!--
+
+    Top navbar
+    Top menu items for the paint app
+
+    Left menu bar for the paint app (collapses into underneath for iphone)
+    
+    -->
+
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .layout {
+            border: 3px solid red;
+            display: flex;
+            flex-direction: column;
+            margin: 0.5rem;
+            padding: 0rem;
+
+            font-size: 20px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            height: 98vh;
+            box-sizing: border-box;
+        }
+
+        .horizontalBar {
+            display: flex;
+            border: 3px solid black;
+            flex-shrink: 0;
+            border-radius: 1rem;
+            margin: 0.2rem;
+            padding: 0.2rem;
+            align-items: center;
+            justify-content: center;
+            justify-self: center;
+            min-height: 2rem;
+        }
+
+        .horizontalBar:last-child {
+            flex: 1;
+            min-height: 0;
+            /* allow it to shrink to fit */
+        }
+
+        .toolAndCanvasContainer {
+            display: flex;
+            flex-direction: row;
+            /* if vertical video, flex-direction is column-reverse */
+            justify-content: center;
+            border: 2px solid blue;
+            border-radius: 1rem;
+            margin: 0rem;
+            width: 100%;
+            min-height: 0;
+            height: 100%;
+        }
+
+        .toolContainer {
+            border: 2px solid purple;
+            display: flex;
+            min-width: 20%;
+            max-width: 20%;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            overflow: scroll;
+        }
+
+        .tool {
+            display: flex;
+            justify-content: center;
+            border: 0px solid blue;
+            border-radius: 1rem;
+            min-width: 3rem;
+            padding: 0.2rem;
+        }
+
+        button {
+            border-radius: 1rem;
+            background-color: rgb(255, 255, 133);
+            font-size: 20px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+        }
+
+        button:hover {
+            background-color: rgb(255, 221, 0);
+            cursor: pointer;
+        }
+
+        .debug {
+            background-color: rgb(255, 134, 134);
+        }
+
+        .color_picker {
+            display: flex;
+            justify-content: center;
+            border: 2px dashed blue;
+            border-radius: 1rem;
+            min-width: 5rem;
+            min-height: 5rem;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            aspect-ratio: 1/1;
+            align-self: center;
+        }
+
+        .previewContainer {
+            display: flex;
+            justify-content: center;
+            border: 2px dashed blue;
+            border-radius: 1rem;
+            min-width: 5rem;
+            min-height: 5rem;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            aspect-ratio: 1/1;
+            max-width: 50%;
+            align-self: center;
+        }
+
+
+
+        .canvasContainer {
+            order: 3;
+            min-height: 0;
+            min-width: 0;
+            aspect-ratio: 1/1;
+            /* overflow: hidden;*/
+        }
+
+
+        .canvas {
+            border: 3px solid green;
+            border-radius: 1rem;
+            min-height: 0;
+            min-width: 0;
+            max-height: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+        }
+    </style>
+
+    <div class="layout">
+        <div class="horizontalBar">bar 1</div>
+        <div class="horizontalBar">bar 2</div>
+        <div class="horizontalBar" style="border: 0px">
+            <div class="toolAndCanvasContainer">
+                <div class="toolContainer" id="toolContainer">
+                    <div class="previewContainer">
+                        <!-- FEATURE!!! Maybe make the preview printed in the middle of the screen, rather than its preview box?
+                         This will help the viewer perceive scale.-->
+                        <svg id="preview" width="100%" height="100%" viewBox="0 0 100 100" fill="purple"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <!-- display a preview of the guy -->
+                            <g id="previewShapeGroup">
+
+                            </g>
+
+                        </svg>
+                    </div>
+                    <div class="tool">
+                        <button id="circle" onclick="selectCircle()">
+                            circle
+                        </button>
+                    </div>
+                    <div class="tool">
+                        <button id="square" onclick="selectSquare()">
+                            square
+                        </button>
+                    </div>
+                    <div class="tool">
+                        <button class="debug" id="square" onclick="printState()">
+                            printState
+                        </button>
+                    </div>
+                    <div class="tool">
+                        <button class="debug" id="square" onclick="printPaintGroup()">
+                            printPaintGroup
+                        </button>
+                    </div>
+                    <div class="tool">
+                        <!-- BUG!!! Currently doesn't change color because of this manual style addition here. Should use classes. -->
+                        <button id="square" onclick="undo()" style="background-color: rgb(204, 255, 133);">
+                            undo
+                        </button>
+                    </div>
+                    <div class="tool">
+                        <!-- BUG!!! Currently doesn't change color because of this manual style addition here. Should use classes. -->
+                        <button id="square" onclick="redo()" style="background-color: rgb(204, 255, 133);">
+                            redo
+                        </button>
+                    </div>
+                    <!-- "Tool 1 make into resize object "-->
+                    <!-- "Tool 2 make into change stroke weight"-->
+                    <div class="tool">
+                        <button id="t1" onclick="scaleUp()">scaleUp</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t2" onclick="scaleDown()">scaleDown</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t3" onclick="strokeWeightUp()">strokeWeightUp</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t4" onclick="strokeWeightDown()">strokeWeightDown</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t5" onclick="toggleStrokeWeightProportional()">strokeweightprop</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t6">tool 6</button>
+                    </div>
+                    <div class="tool">
+                        <button id="t7">tool 7</button>
+                    </div>
+                    <div class="color_picker">
+                        <svg id="colorPicker" width="100%" height="100%" viewBox="0 0 256 256" fill="purple"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <!-- Defining a color gradient for the color picker: -->
+                            <defs>
+
+                            </defs>
+                            <rect x="0" y="0" width="100%" height="100%" fill="blue"></rect>
+
+                            <g id="hPicker"></g>
+                            <g id="sPicker"></g>
+                            <g id="lPicker"></g>
+                            <g id="aPicker"></g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="canvasContainer">
+                    <div class="canvas">
+
+                        <svg id="viewBox" width="100%" height="100%" viewBox="0 0 1000 1000" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <rect x="0" y="0" width="100%" height="100%" fill="lavender"></rect>
+                            <rect x="50%" y="50%" width="25%" height="25%" fill="green" round="5px">
+                            </rect>
+
+                            <g id="paintGroup">
+
+                            </g>
+
+                            <g id="cursorGroup">
+
+                            </g>
+
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        const state = {
+            toolSelected: 'circle',
+            strokeWeight: 4,
+            strokeWeightProportional: true,// makes strokeWeight interpreted by the painter as proportional to size. 
+            // so the actual strokeWeight becomes: strokeWeight * size * constant factor.
+            size: 50,
+            stroke: 'rgb(0, 0, 0)',
+            fill: 'rgb(200, 200, 255)',
+
+        };
+
+        // run on startup:
+        setTimeout(() => {
+
+        }, 1);
+
+
+
+        // button functions:
+
+        function selectCircle() {
+            state.toolSelected = 'circle';
+        }
+        function selectSquare() {
+            state.toolSelected = 'square';
+        }
+        function printState() {
+            console.log(state);
+        }
+        function printPaintGroup() {
+            console.log(document.getElementById('paintGroup').children);
+        }
+
+
+        const scaleFactor = 1.1;
+        function scaleUp() {
+            state.size *= scaleFactor;
+        }
+        function scaleDown() {
+            state.size /= scaleFactor;
+        }
+        function strokeWeightUp() {
+            state.strokeWeight *= scaleFactor;
+        }
+        function strokeWeightDown() {
+            state.strokeWeight /= scaleFactor;
+        }
+        function toggleStrokeWeightProportional() {
+            state.strokeWeightProportional = !state.strokeWeightProportional;
+        }
+
+        // FEATURE!!! could eventually let people browse through this stack and recover lost work.
+        // (In essence, save the redoStack when erased.)
+        let redoStack = [];
+        function undo() {
+            try {
+                const shapes = document.getElementById('paintGroup').children;
+                if (shapes.length > 0) {
+                    // builds the redo stack
+                    // console.log("Setting up to queue up", shapes[shapes.length - 1]);
+                    redoStack.push(shapes[shapes.length - 1]);
+
+                    // builds a new list, stopping short by 1 operation
+                    // erases the old list, builds it anew
+
+                    const newShapes = [];
+                    for (let i = 0; i < shapes.length - 1; i++) {
+                        newShapes.push(shapes[i]);
+                    }
+
+                    // pushes the elements back onto the paintGroup
+                    const pg = document.getElementById('paintGroup');
+                    pg.innerHTML = '';
+                    newShapes.forEach((shape) => {
+                        pg.appendChild(shape);
+                    });
+
+                }
+            } catch (error) {
+                console.error("Error on undo. Is shapes not an array?");
+                console.error(error);
+            }
+        }
+        function redo() {
+            try {
+                if (redoStack.length > 0) {
+                    const s = redoStack.pop();
+                    if (s) {
+                        // console.log("Redoing and placing: ", s);
+                        document.getElementById('paintGroup').appendChild(s);
+                    }
+                }
+            } catch (error) {
+                console.error("Error on redo.");
+                console.error(error);
+            }
+        }
+
+
+
+        // Helper functions:
+
+        // Converts a point from client coordinates to svg coordinates
+        function toSVG(clientX, clientY, svgElement = document.getElementById('viewBox')) {
+            const pt = svgElement.createSVGPoint();
+            pt.x = clientX;
+            pt.y = clientY;
+            return pt.matrixTransform(svgElement.getScreenCTM().inverse());
+        }
+
+        // returns an svg element of type 'type' appended to the document.
+        function makeSVG(type) {
+            try {
+                const s = document.createElementNS('http://www.w3.org/2000/svg', type);
+                return s;
+            } catch (error) {
+                console.error("Failed to create a new SVG element of type " + type);
+                console.error(error);
+                return false;
+            }
+        }
+
+
+        function getErrorCursor() {
+            const s = makeSVG('circle');
+            const r = state.size / 2;
+            s.setAttribute('cx', '0');
+            s.setAttribute('cy', '0');
+            s.setAttribute('r', `500`);
+
+            s.setAttribute('stroke', `pink`);
+            s.setAttribute('stroke-width', `20`);
+            s.setAttribute('fill', `red`);
+
+            return s;
+        }
+
+
+        function makeShapeFromState() {
+            // makes a shape centered at 0, 0 and returns it
+            let s;
+            if (state.toolSelected === 'circle') {
+                s = makeSVG('circle');
+                const r = state.size / 2;
+                s.setAttribute('cx', '0');
+                s.setAttribute('cy', '0');
+                s.setAttribute('r', `${r}`);
+
+            } else if (state.toolSelected === 'square') {
+                s = makeSVG('rect');
+                const size = state.size;
+                const offset = - size / 2;
+                s.setAttribute('x', `${offset}`);
+                s.setAttribute('y', `${offset}`);
+                s.setAttribute('width', `${size}`);
+                s.setAttribute('height', `${size}`);
+            } else {
+                return getErrorCursor();
+            }
+
+            s.setAttribute('stroke', `${state.stroke}`);
+            const stroke_width = state.strokeWeightProportional ?
+                state.strokeWeight * state.size / 50 : state.strokeWeight;
+            s.setAttribute('stroke-width', `${stroke_width}`);
+            s.setAttribute('fill', `${state.fill}`);
+
+            return s;
+        }
+
+        function makePreviewShape() {
+            // makes a shape centered at 0, 0 of size 50 and return it
+            // container size is width=100
+            let s = makeShapeFromState();
+            const scaleSize = 50 / state.size;
+            s.setAttribute('transform', `translate(50, 50) scale(${scaleSize},${scaleSize})`);
+
+            return s;
+        }
+
+
+        let curSerialNumber = 0;
+        function idGen() {
+            curSerialNumber++;
+            return `shape${curSerialNumber}`;
+        }
+
+        function placeCursorShape(clientX, clientY) {
+            redoStack = [];
+            const curs = document.getElementById('activeCursor');
+            if (!curs) {
+                console.error("No cursor shape available for placeCursorShape() !!");
+            } else {
+                const newShape = makeShapeFromState();
+
+                newShape.id = idGen();
+                console.log(`Placed ${newShape.id}`);
+
+                const pt = toSVG(clientX, clientY);
+                newShape.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+
+                document.getElementById('paintGroup').appendChild(newShape);
+            }
+        }
+
+        // Implement cursor functionality (hovering over the canvas) 
+
+        const cursorGroup = document.getElementById('cursorGroup');
+        document.getElementById('viewBox').addEventListener('mousemove', (e) => {
+            // console.log("Now you done it");
+
+            const pt = toSVG(e.clientX, e.clientY);
+            cursorGroup.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+        });
+
+        // we can do this because we can guarantee that every time
+        // we select a new tool, we'll leave the window
+        // thus erasing and allowing us to re-create the shape.
+        // That is, unless we implement keyboard usage / hotkeys
+        document.getElementById('viewBox').addEventListener('mouseenter', (e) => {
+            // add the correct cursor preview in at 0, 0:
+
+            const newCursor = makeShapeFromState();
+            newCursor.id = 'activeCursor';
+            cursorGroup.appendChild(newCursor);
+        });
+
+        document.getElementById('viewBox').addEventListener('mouseleave', (e) => {
+            // console.log("leave");
+
+            // Remove all cursor previews:
+            cursorGroup.innerHTML = '';
+        });
+
+        document.getElementById('viewBox').addEventListener('click', (e) => {
+            // console.log("Clicked");
+
+            // attempt to add cursor to image
+            if (true) {
+                placeCursorShape(e.clientX, e.clientY);
+            }
+        });
+
+        const logElementsAtClick = false;
+        if (logElementsAtClick) {
+            document.addEventListener('click', (e) => {
+                console.log("Elements at click:");
+                console.log(document.elementsFromPoint(e.clientX, e.clientY));
+            });
+        }
+
+        // add an event listener to the tool window to update the preview:
+
+        let previewShape;
+        function updatePreviewState() {
+            // console.log("Clicked tool container");
+            previewShape = makePreviewShape();
+            previewShape.id = 'previewShapeActual';
+            document.getElementById('previewShapeGroup').innerHTML = '';
+            document.getElementById('previewShapeGroup').appendChild(previewShape);
+        }
+        document.getElementById('toolContainer').addEventListener('click', (e) => {
+            updatePreviewState();
+        });
+        // run on launch:
+        updatePreviewState();
+
+    </script>
+</body>

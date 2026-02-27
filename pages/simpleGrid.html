@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+
+
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dots</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imgs/favicon-16x16.png">
+
+    <!-- gimme those cool fonts: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Processing enabled (p5.js)-->
+    <script src="/libraries/p5.min.js"></script>
+    <script src="/libraries/p5.sound.min.js"></script>
+
+</head>
+
+
+
+<style>
+    .parent {
+        flex: 1 100px;
+    }
+
+    .children {
+        flex: 1 1 auto;
+    }
+</style>
+
+
+
+<body>
+
+    <div class=".parent">
+        <div class="children" style="text-align: center; font-size: 2rem;">
+            dots n biz
+        </div>
+        <div class="children" style="text-align: center; font-size: 2rem;">
+            2nd panel
+        </div>
+        <div class="children" style="text-align: center; font-size: 2rem; align: center;">
+            <script>
+
+            </script>
+        </div>
+
+    </div>
+
+
+
+    <!-- The actual item: -->
+
+
+
+    <!-- This one's sensitive, but it doesn't make use of 
+    svg logic or dom elements or anything too much.
+
+    I basically just need a quick screen of SVG elements that say 
+    'draw, line, rect,' etc and can be wired to sense
+    when they're clicked, and change state.
+
+    Learning how to manage state.
+    Speaking, trying to get sensory.
+    -->
+    <script>
+        function launchDrawSketch() {
+            console.log("Launching draw sketch:");
+
+
+
+
+            const w = 800;
+            const h = 800
+            const bgcol = [230, 255, 230];
+
+            function setup() {
+                let canvas = createCanvas(w, h);
+                canvas.parent('scriptHoldster')
+                background(bgcol);
+
+                console.log("Hello");
+            }
+
+
+
+            let grid = {
+                rows: 4,
+                cols: 5,
+
+                // style: 
+                strw: 3, // stroke weight
+                strc: [0, 0, 0, 255], // stroke color, rgba
+
+                hovc: [...bgcol.map((c) => c = c - 100)], // hover color, 100 units darker than bgcol
+
+
+                p: function () {
+                    // console.log("Running p");
+                    const strc = this.strc;
+                    stroke(strc);
+
+                    const strw = this.strw;
+                    strokeWeight(strw);
+
+                    // print column borders
+                    for (let r = 0; r < this.rows + 1; r++) {
+                        const x = r * w / this.rows;
+                        const y = [0, h];
+
+                        line(x, y[0], x, y[1]);
+                    }
+
+                    // print row borders
+                    for (let c = 0; c < this.cols + 1; c++) {
+                        const x = [0, w];
+                        const y = c * h / this.cols;
+
+                        line(x[0], y, x[1], y);
+                    }
+
+                    console.log(this.hovc);
+                },
+
+                mouseMoved: function (x, y) {
+                    // console.log(`Moved over ${x}, ${y}`);
+
+                },
+
+
+                onScreen: false,
+                movedOffscreen: function () {
+                    if (this.onScreen) {
+                        this.justMovedOffscreen();
+                    }
+                    this.onScreen = false;
+                },
+                movedOnscreen: function () {
+                    if (!this.onScreen) {
+                        this.justMovedOnscreen();
+                    }
+                    this.onScreen = true;
+                },
+                justMovedOffscreen: function () {
+                    console.log("Just Moved Off Screen");
+                },
+                justMovedOnscreen: function () {
+                    console.log("Just Moved On Screen");
+
+                }
+            }
+
+
+
+            // will run 10 frames before stopping
+            const lock = 10;
+            let curFrame = 0;
+
+            function draw() {
+                while (curFrame < lock) {
+                    console.log("---------------------------------");
+                    console.log("NewFrame");
+                    console.log("---------------------------------");
+                    grid.p();
+                    // console.log("Tryna grid");
+
+                    curFrame++;
+                }
+
+            }
+
+            function windowResized() {
+                let parent = documetn.getElementById('scriptHoldster');
+                resizeCanvas(parent.offsetWidth, parent.offsetHeight);
+
+            }
+
+            function mouseMoved() {
+                // console.log("Mobbin mouse");
+                console.log(grid.onScreen);
+
+                if (mouseX < 0 || mouseX > w || mouseY < 0 || mouseY > h) {
+                    // moved offscreen
+                    grid.movedOffscreen();
+
+                } else {
+                    grid.movedOnscreen();
+
+                    grid.mouseMoved(mouseX, mouseY);
+                }
+            }
+
+
+            window.setup = setup;
+            window.draw = draw;
+            window.mouseMoved = mouseMoved;
+        }
+    </script>
+
+
+
+
+    <!-- The render of the item -->
+
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(1, 2fr 1fr);
+            /* time signature. repeat 3 units of "1" */
+            /* grid-template-columns: repeat(2, 2fr 1fr); /* repeat 2 units of '2/3rds, 1/3rd' spacing. */
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            /* rounded rect */
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+
+    <div class="grid">
+        <div class="card">Item</div>
+        <div class="card">Notes</div>
+        <div class="card" id="scriptHoldster">
+            <script>
+                launchDrawSketch();
+            </script>
+        </div>
+        <div class="card" id="scriptNotes">
+            Hey that's pretty good.
+        </div>
+
+        <div class="card">Card 1</div>
+        <div class="card">Card 2</div>
+        <div class="card">Card 3</div>
+        <div class="card">Card 4</div>
+        <div class="card">Card 5</div>
+        <div class="card">Card 6</div>
+    </div>
+
+
+    <div>
+
+    </div>
+
+    <script>
+    </script>
+</body>

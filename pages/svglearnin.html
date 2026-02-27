@@ -26,10 +26,14 @@
 <body>
     <svg id="godhead" version="1.1" width="1000" height="700" xmlns="http://www.w3.org/2000/svg">
 
+        <rect width="100%" height="100%" fill="rgb(200, 200, 200)"></rect>
         <g transform="translate(100, 100)">
             <rect id="main" width="300" height="200" fill="blue"></rect>
         </g>
 
+        <g id="drawCanvas" width="50%" height="50%">
+
+        </g>
 
     </svg>
 
@@ -179,6 +183,135 @@
 
             const drawArea = document.getElementById('drawCanvas');
             drawArea.appendChild(c);
+
+        }
+
+
+        const jsrect = svg('rect');
+        jsrect.setAttribute('x', "150");
+        jsrect.setAttribute('y', "150");
+        jsrect.setAttribute('width', "200");
+        jsrect.setAttribute('height', '50');
+        jsrect.setAttribute("fill", "green");
+        jsrect.setAttribute("id", "jsrect");
+        jsrect.setAttribute("pressedOn", "false");
+        document.getElementById("godhead").appendChild(jsrect);
+
+        document.addEventListener("click", (e) => {
+            console.log(document.elementsFromPoint(e.clientX, e.clientY));
+        });
+
+
+        // mouseclicked
+        const mc = {
+            x: 0,
+            y: 0,
+            down: false
+        };
+
+        document.addEventListener("mousedown", (e) => {
+            // console.log("Mousedown");
+            mc.x = e.clientX;
+            mc.y = e.clientY;
+            mc.down = true;
+
+            if (document.elementsFromPoint(e.clientX, e.clientY).includes(jsrect)) {
+                jsrect.setAttribute("pressedOn", "true");
+            }
+
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            // console.log("Mousemove");
+
+            if (jsrect.getAttribute("pressedOn") === "true") {
+                console.log("Dragging");
+
+                const x = jsrect.getAttribute('x');
+                const y = jsrect.getAttribute('y');
+                const w = jsrect.getAttribute('width');
+                const h = jsrect.getAttribute('height');
+
+                const newwidth = 200 + e.clientX - mc.x;
+                jsrect.setAttribute("width", newwidth);
+            };
+
+        });
+        document.addEventListener("mouseup", (e) => {
+            // console.log("Mouseup");
+
+            jsrect.setAttribute("pressedOn", "false");
+            mc.down = false;
+        });
+
+
+
+
+
+        // okay so this would be the prototype for a scalable, draggable object.
+        // I would need to keep track of all of these details.
+        // When pressing a mouse down, I just need to pass it into this object.
+        // Could do that by putting them all into a list, then adding listItem.forEach((o) => {o.pressed(clientX, clientY)})
+        // Then for things like, "oh, I need to get the anchor's x and y," you just make a function
+        // that takes into account its translate position, and pulls from that.
+
+        // Really makes you appreciate what has gone into Finder.
+        // Maybe I just want to make it... finder-esque.
+        // like, you can change the zoom value for it (increase thickness and icon size)
+        // considering having the icons themselves live within a flexbox of the element
+        // so then the flexbox size changes
+        // but I'll have to fuck around with that first; flexbox design.
+        // let's just make this design first.
+        // we're learning how to make designs right now. This is the game.
+        // Not a speedrun to build JBPaint, but a north star for learning frontend design.
+        // the goal is to learn frontend design here.
+
+        // Needs to keep track of:
+        // Mouse down coordinates
+        // Mouse down status (true / false)
+        // All the interior elements
+        // click point for drag
+        // current position (based on translate)
+        // anchor point and click point for scaleX
+        // anchor point and click point for scaleY
+        // anchor point and click point for scaleX, scaleY 
+
+        // so interesting; when transforming, you have to assign both at once.
+        // that is, setAttribute("transform", "scale(1.1, 1)") will knock out your translate(100, 100).
+
+
+        const scalableWindow = {
+            m: {
+                x: 0,
+                y: 0,
+                down: false
+            },
+            mainElement: document.getElementById("MainElement"),
+            interiorElements: [],
+            dragListeners: ['blankElement'],
+            scaleX: {
+                listeners: ['blankElement'],
+                anchor: 'blankElement'
+            },
+            scaleY: {
+                listeners: ['blankElement'],
+                anchor: 'blankElement'
+            },
+
+            translate: {
+                x: 0,
+                y: 0
+            },
+            scale: {
+                w: 1,
+                h: 1
+            },
+            default: {
+                x: 0,
+                y: 0,
+                w: 1,
+                h: 1
+            },
 
         }
 
