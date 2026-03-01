@@ -13,9 +13,16 @@ For feature ideas, control+F for "FEATURE!!!"
 
 
 To do:
-1. Control stroke width and color
-2. Control fill color
-(make a color picker and stuff)
+
+1. Add line feature
+2. Add fill feature
+3. Add select and transform feature
+4. Add export feature (svg or png)
+5. Add 'upload image' feature
+6. Make it look decent
+
+
+
 
 3. Change the frontend visuals to match better, like, a circle button for circles
 4. and a better method of placing them.
@@ -245,10 +252,10 @@ To do:
                         <button id="t5" onclick="toggleStrokeWeightProportional()">strokeweightprop</button>
                     </div>
                     <div class="tool">
-                        <button id="t6">tool 6</button>
+                        <button id="t6" onclick="toggleColorToFill()">colorToFill</button>
                     </div>
                     <div class="tool">
-                        <button id="t7">tool 7</button>
+                        <button id="t7" onclick="toggleColorToStroke()">colorToStroke</button>
                     </div>
                     <div class="color_picker">
                         <svg id="colorPicker" width="100%" height="100%" viewBox="0 0 360 360" fill="purple"
@@ -256,48 +263,6 @@ To do:
 
                             <!-- Defining a color gradient for the color picker: -->
                             <defs>
-                                <!--
-                                <linearGradient id="testGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#000000"></stop>
-                                    <stop offset="50%" stop-color="#FF0000"></stop>
-                                    <stop offset="100%" stop-color="#FFFFFF"></stop>
-                                </linearGradient>
-                                <linearGradient id="testGradient2" x1="0%" y1="0%" x2="100%" y2="50%">
-                                    <stop id="gs1" offset="0%" stop-color="#000000"></stop>
-                                    <stop id="gs3" offset="50%" stop-color="#FF0000"></stop>
-                                    <stop id="gs2" offset="100%" stop-color="#FFFFFF"></stop>
-                                </linearGradient>
-                                -->
-
-                                <!-- Gradient for saturation and lightness -->
-                                <!--
-                                    Currently using a standard HSL calculation.
-                                    But I can modify this to be closer to an OKCLH color picker:
-                                    https://claude.ai/chat/f35673d5-c803-4c56-8f84-e5239c986e7a
-                                    
-                                    Calculations:
-                                
-                                
-                                 -->
-                                <!-- 
-                                <linearGradient id="gsl1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop id="gsl1" offset="0%" stop-color="hsl(0, 0%, 0%)" stop-opacity="1"></stop>
-                                    <stop id="gsl2" offset="50%" stop-color="hsl(80, 100%, 50%)" stop-opacity="1">
-                                    </stop>
-                                    <stop id="gsl3" offset="100%" stop-color="hsl(80, 100%, 100%)" stop-opacity="1">
-                                    </stop>
-                                </linearGradient>
-                                <linearGradient id="gh" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop id="gs1" offset="0%" stop-color="hsl(0, 0%, 0%)" stop-opacity="1"></stop>
-                                    <stop id="gs2" offset="100%" stop-color="hsl(50, 50%, 50%)" stop-opacity="1">
-                                    </stop>
-                                </linearGradient>Going to need to place a background grid here
-                                <linearGradient id="ga" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop id="gs1" offset="0%" stop-color="hsl(0, 0%, 0%)" stop-opacity="1"></stop>
-                                    <stop id="gs2" offset="100%" stop-color="hsl(50, 50%, 50%)" stop-opacity="1">
-                                    </stop>
-                                </linearGradient>
-                                 -->
 
                                 <linearGradient id="gwhite" x1="0%" y1="0%" x2="100%" y2="0%">
                                     <stop id="gwhite1" offset="0%" stop-color="#FFFFFF" stop-opacity="1"></stop>
@@ -308,8 +273,8 @@ To do:
                                     <stop id="gwhite2" offset="100%" stop-color="#000000" stop-opacity="1"></stop>
                                 </linearGradient>
                                 <linearGradient id="gtransparent" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop id="gwhite1" offset="0%" stop-color="#000000" stop-opacity="1"></stop>
-                                    <stop id="gwhite2" offset="100%" stop-color="#000000" stop-opacity="0"></stop>
+                                    <stop id="gwhite1" offset="0%" stop-color="#000000" stop-opacity="0"></stop>
+                                    <stop id="gwhite2" offset="100%" stop-color="#000000" stop-opacity="1"></stop>
                                 </linearGradient>
 
                                 <linearGradient id="hueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -319,13 +284,13 @@ To do:
                                     -->
                                 </linearGradient>
                             </defs>
-                            <!-- Lightness picker -->
-                            <rect id="hfill" x="0" y="0" width="100%" height="61%" fill="#00FF00"></rect>
-                            <rect id="hwhite" x="0" y="0" width="100%" height="61%" fill="url(#gwhite)"></rect>
-                            <rect id="hblack" x="0" y="0" width="100%" height="61%" fill="url(#gblack)"></rect>
+                            <!-- Lightness Space -->
+                            <rect id="lfill" x="0" y="0" width="100%" height="61%" fill="#00FF00"></rect>
+                            <rect id="lwhite" x="0" y="0" width="100%" height="61%" fill="url(#gwhite)"></rect>
+                            <rect id="lblack" x="0" y="0" width="100%" height="61%" fill="url(#gblack)"></rect>
 
 
-                            <!-- Transparency picker -->
+                            <!-- Transparency Space -->
                             <g id="groupTransparentPicker">
                                 <rect fill="black" x="0%" y="80%" width="10%" height="10%"></rect>
                                 <rect fill="white" x="10%" y="80%" width="10%" height="10%"></rect>
@@ -353,35 +318,40 @@ To do:
                                 </rect>
                             </g>
 
-                            <!-- Hue picker -->
+                            <!-- Hue Space -->
                             <rect id="ghPicker" x="0" y="61%" width="100%" height="20%" fill="url(#hueGradient)"></rect>
+
+
+
+                            <!-- Lightness Picker -->
+                            <circle id="glCircle" cx="350" cy="50" r="15" fill="transparent" stroke="white"
+                                stroke-width="6">
+                            </circle>
+                            <!-- Hue Picker -->
+                            <circle id="ghCircle" cx="150" cy="71%" r="15" fill="transparent" stroke="black"
+                                stroke-width="6">
+                            </circle>
+                            <!-- Transparency Picker -->
+                            <circle id="gaCircle" cx="360" cy="90%" r="15" fill="transparent" stroke="white"
+                                stroke-width="6">
+                            </circle>
 
                             <!-- 
                                 ids to check for collision:
 
-                                lightness: hfill (modify attribute 'fill')
+                                lightness: lfill (modify attribute 'fill')
                                 transparency: gaPicker
-                                
+                                hue: ghPicker (0 - 360, take directly from x value)
+
+
+                                ghCircle, detect x value, 0 - 360
+                                gaCircle, detect x value, map 0 - 360 to 0 - 100
                             
                             -->
                         </svg>
 
                         <script>
-                            // document.getElementById('gs1').setAttribute('stop-color', '#0000FF');
-                            function makeHueGradient() {
-                                for (let i = 0; i < 361; i += 60 /* identical results to i++ with less elements */) {
-                                    const id = `hg${i}`;
-                                    const offset = `${100 * i / 360}%`;
-                                    const stopColor = `hsl(${i}, 100%, 50%)`;
-
-                                    const s = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                                    s.setAttribute('id', id);
-                                    s.setAttribute('stop-color', stopColor);
-                                    s.setAttribute('offset', offset);
-                                    document.getElementById('hueGradient').appendChild(s);
-                                }
-                            }
-                            makeHueGradient();
+                            /* color picker script is down below */
                         </script>
                     </div>
                 </div>
@@ -397,8 +367,7 @@ To do:
                             xmlns="http://www.w3.org/2000/svg">
 
                             <rect x="0" y="0" width="100%" height="100%" fill="lavender"></rect>
-                            <rect x="50%" y="50%" width="25%" height="25%" fill="green" round="5px">
-                            </rect>
+
 
                             <g id="paintGroup">
 
@@ -424,8 +393,12 @@ To do:
             strokeWeightProportional: true,// makes strokeWeight interpreted by the painter as proportional to size. 
             // so the actual strokeWeight becomes: strokeWeight * size * constant factor.
             size: 50,
-            stroke: 'rgb(0, 0, 0)',
             fill: 'rgb(200, 200, 255)',
+            fillOpacity: 50, // given in 0 - 100, converted to 0 - 1 in the setAttribute process
+            stroke: 'rgb(0, 0, 0)',
+            strokeOpacity: 100,
+            colorToFill: true, // false means color gets assigned to stroke
+
 
         };
 
@@ -467,6 +440,13 @@ To do:
         }
         function toggleStrokeWeightProportional() {
             state.strokeWeightProportional = !state.strokeWeightProportional;
+        }
+
+        function toggleColorToFill() {
+            state.colorToFill = true;
+        }
+        function toggleColorToStroke() {
+            state.colorToFill = false;
         }
 
         // FEATURE!!! could eventually let people browse through this stack and recover lost work.
@@ -584,6 +564,11 @@ To do:
             s.setAttribute('stroke-width', `${stroke_width}`);
             s.setAttribute('fill', `${state.fill}`);
 
+            const fillOpac = state.fillOpacity / 100;
+            s.setAttribute('fill-opacity', `${fillOpac}`);
+            const strokeOpac = state.strokeOpacity / 100;
+            s.setAttribute('stroke-opacity', `${strokeOpac}`);
+
             return s;
         }
 
@@ -682,7 +667,168 @@ To do:
             updatePreviewState();
         });
         // run on launch:
+        updateFillColor();
         updatePreviewState();
+
+
+
+
+
+
+
+        // ------------------------- COLOR PICKER: -------------------------
+
+        // BUG!!! The saturation / lightness square is setup for HSB but generates HSL... so there's a slight difference
+        // in how it looks vs the color you get...
+
+
+
+        // document.getElementById('gs1').setAttribute('stop-color', '#0000FF');
+        function makeHueGradient() {
+            for (let i = 0; i < 361; i += 60 /* identical results to i++ with less elements */) {
+                const id = `hg${i}`;
+                const offset = `${100 * i / 360}%`;
+                const stopColor = `hsl(${i}, 100%, 50%)`;
+
+                const s = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                s.setAttribute('id', id);
+                s.setAttribute('stop-color', stopColor);
+                s.setAttribute('offset', offset);
+                document.getElementById('hueGradient').appendChild(s);
+            }
+        }
+        makeHueGradient();
+
+
+        const colorPicker = document.getElementById('colorPicker');
+        const mcp = { // short for mouseColorPicker
+            down: false,
+            element: undefined, // or l, h, a
+            elementName: 'undefined' // or 'l', 'h', 'a'
+        }
+
+        function getCorrectCircle() {
+            if (mcp.elementName !== 'undefined') {
+                if (mcp.elementName === 'l') {
+                    return document.getElementById('glCircle');
+                } else if (mcp.elementName === 'h') {
+                    return document.getElementById('ghCircle');
+                } else if (mcp.elementName === 'a') {
+                    return document.getElementById('gaCircle');
+                }
+            }
+
+            return undefined;
+        }
+
+
+
+        function updateFillColor() {
+            // console.log(document.getElementById('ghCircle').getAttribute('cx'));
+            // console.log(document.getElementById('glCircle').getAttribute('cx'));
+            // console.log(document.getElementById('gaCircle').getAttribute('cx'));
+
+
+            // document.getElementById('ghCircle').getAttribute('cx');
+
+            const h = document.getElementById('ghCircle').getAttribute('cx');
+            const s = document.getElementById('glCircle').getAttribute('cx') * 100 / 360;
+            const a = document.getElementById('gaCircle').getAttribute('cx') * 100 / 360;
+            // const ld = document.getElementById('glCircle').getAttribute('cy');
+
+            // lightness calculation in hsl is a headache... don't ask.
+            const y = document.getElementById('glCircle').getAttribute('cy');
+            let yval = (1 - (y / (360 * 61 / 100))) * 50;
+            if (yval < 0) yval = 0;
+            const xval = (100 - s) / 100 + 1;
+            // console.log(yval);
+            // console.log(xval);
+            const l = xval * yval;
+
+
+            let makeStrokeInstead = !state.colorToFill;
+
+            if (!makeStrokeInstead) {
+                state.fill = `hsl(${h}, ${s}%, ${l}%)`;
+                state.fillOpacity = a;
+            } else {
+                state.stroke = `hsl(${h}, ${s}%, ${l}%)`;
+                state.strokeOpacity = a;
+            }
+
+
+
+            updatePreviewState();
+        }
+
+        function adjustCircle(e) {
+            if (mcp.element) {
+                const p = toSVG(e.clientX, e.clientY, colorPicker);
+
+                if (p.x < 0) p.x = 0;
+                if (p.x > 360) p.x = 360;
+
+                if (p.y < 0) p.y = 0;
+                if (p.y > 360 * 0.61) p.y = 360 * 0.61;
+
+                const c = getCorrectCircle();
+                if (c) {
+                    c.setAttribute('cx', `${p.x}`);
+
+                    if (mcp.elementName === 'l') {
+                        c.setAttribute('cy', `${p.y}`);
+                    }
+
+                    if (mcp.elementName === 'h') {
+                        const lFillColor = `hsl(${p.x}, 100%, 50%)`;
+                        document.getElementById('lfill').setAttribute('fill', lFillColor);
+                    }
+                }
+            }
+        }
+
+        colorPicker.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            // console.log("Clicked on that biz");
+            mcp.down = true;
+
+            let selected = undefined;
+            const list = document.elementsFromPoint(e.clientX, e.clientY);
+            const l = document.getElementById('lfill');
+            const h = document.getElementById('ghPicker');
+            const a = document.getElementById('gaPicker');
+
+            if (list.includes(l)) {
+                mcp.element = l;
+                mcp.elementName = 'l';
+            } else if (list.includes(h)) {
+                mcp.element = h;
+                mcp.elementName = 'h';
+            } else if (list.includes(a)) {
+                mcp.element = a;
+                mcp.elementName = 'a';
+            }
+            adjustCircle(e);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (mcp.down) {
+                adjustCircle(e);
+                updateFillColor();
+            }
+        });
+        document.addEventListener('mouseup', (e) => {
+            mcp.element = undefined;
+            mcp.elementName = 'undefined';
+            mcp.down = false;
+            updateFillColor();
+
+        });
+
+        colorPicker.addEventListener('mouseleave', (e) => {
+
+        });
+
+
 
     </script>
 </body>
